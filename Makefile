@@ -1,0 +1,39 @@
+##
+## EPITECH PROJECT, 2025
+## CADlang
+## File description:
+## A Coding-style-based Algorithmic Development Language;
+##
+
+SRC  = $(shell find -name *.c)
+NAME = cadlang
+
+compile:
+	@ gcc -g -Wall -Wextra $(SRC) $(LIBS) \
+		-o $(NAME)
+
+run: compile
+	@ ./$(NAME)
+	@ rm $(NAME)
+
+valgrind: compile
+	@valgrind -s --show-leak-kinds=none \
+		--track-origins=yes \
+		--leak-check=full \
+		--error-limit=no \
+	./$(NAME)
+	@ rm $(NAME)
+
+update: re
+	@ sudo mv $(NAME) /usr/local/bin
+
+clean:
+	@ rm -fr *.o
+
+fclean: clean
+	@ rm -f $(NAME)
+
+re: fclean compile
+
+kronk:
+	@ echo "Oh ouais."

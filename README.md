@@ -1,2 +1,2 @@
 # CADlang
-Coding-style-based Algorithmic Development Language.
+A Coding-style-based Algorithmic Development Language.
