@@ -2,7 +2,7 @@
 ## EPITECH PROJECT, 2025
 ## CADlang
 ## File description:
-## A Coding-style-based Algorithmic Development Language;
+## Makefile;
 ##
 
 SRC  = $(shell find -name *.c)
@@ -19,6 +19,7 @@ run: compile
 valgrind: compile
 	@valgrind -s --show-leak-kinds=none \
 		--track-origins=yes \
+		--track-fds=yes \
 		--leak-check=full \
 		--error-limit=no \
 	./$(NAME)
