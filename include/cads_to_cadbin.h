@@ -8,7 +8,9 @@
 #ifndef CADLANG_ASM_COMPILER_H
 
     #define CADLANG_ASM_COMPILER_H
+
     #define INSTRUCTION_COUNT 13
+    #define COLOR_ERR "\x1b[38;2;255;55;55m"
 
     #include <stdio.h>
     #include <string.h>

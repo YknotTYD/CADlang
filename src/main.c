@@ -47,10 +47,10 @@ static char **read_file(const char *filepath)
 
 int main(void)
 {
-    char **file = read_file("test.cads");
+    char **file = read_file("temp.cads");
 
     if (file == 0) {
-        printf("Coulnd't read file '%s'.\n", "test.cads");
+        printf(COLOR_ERR"Coulnd't read file '%s'.\n", "temp.cads");
         return 84;
     }
     parse((const char **)file);
