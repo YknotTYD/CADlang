@@ -50,7 +50,8 @@ int main(void)
     char **file = read_file("temp.cads");
 
     if (file == 0) {
-        printf(COLOR_ERR"Coulnd't read file '%s'.\n", "temp.cads");
+        printf(
+            COLOR_ERR"Coulnd't read file '%s'.\n"COLOR_DEFAULT, "temp.cads");
         return 84;
     }
     parse((const char **)file);

@@ -19,7 +19,7 @@ static int process_instruction(char **warray, int line_index)
             return 0;
         }
     }
-    printf(COLOR_ERR"Unexpected token '%s' on line %i.\n",
+    printf(COLOR_ERR"Unexpected token '%s' on line %i.\n"COLOR_DEFAULT,
         warray[0], line_index + 1);
     return 1;
 }
@@ -48,6 +48,7 @@ void parse(const char **file)
     for (int i = 0; file[i]; i++) {
         warray = str_to_warray((char *)file[i], &len, ", \t\n");
         if (process_line(warray, len, i)) {
+            free_warray(warray);
             break;
         }
         free_warray(warray);

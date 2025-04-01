@@ -11,9 +11,13 @@
 
     #define INSTRUCTION_COUNT 13
     #define COLOR_ERR "\x1b[38;2;255;55;55m"
+    #define COLOR_DEFAULT "\x1b[39m"
 
     #include <stdio.h>
     #include <string.h>
+
+typedef struct {
+} cads_to_cadbin_context_t;
 
 extern const char *instructions[INSTRUCTION_COUNT];
 

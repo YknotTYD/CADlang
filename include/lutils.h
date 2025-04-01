@@ -10,10 +10,10 @@
     #include <stdlib.h>
     #include <unistd.h>
 
-typedef struct {
+typedef struct node_s {
     void *data;
-    void *previous;
-    void *next;
+    struct node_s *previous;
+    struct node_s *next;
 } node_t;
 
 typedef struct {

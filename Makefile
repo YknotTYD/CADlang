@@ -16,12 +16,22 @@ run: compile
 	@ ./$(NAME)
 	@ rm $(NAME)
 
+valgrinds: compile
+	@valgrind -s --show-leak-kinds=none \
+		--track-origins=yes \
+		--track-fds=yes \
+		--leak-check=full \
+		--error-limit=no \
+	./$(NAME)
+	@ rm $(NAME)
+
 valgrind: compile
 	@valgrind -s --show-leak-kinds=none \
 		--track-origins=yes \
 		--track-fds=yes \
 		--leak-check=full \
 		--error-limit=no \
+		--quiet \
 	./$(NAME)
 	@ rm $(NAME)
 
