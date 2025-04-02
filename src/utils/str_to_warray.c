@@ -5,7 +5,7 @@
 ** void;
 */
 
-#include "../include/main.h"
+#include "../../include/main.h"
 
 //add array flags (%S, %I etc...);
 

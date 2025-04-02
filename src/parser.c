@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** CADlang
 ** File description:
-** cads_to_cadbin.c;
+** parser.c;
 */
 
 #include "../include/cads_to_cadbin.h"
@@ -19,18 +19,18 @@ const char *instructions[INSTRUCTION_COUNT] = {
 
 const int operands[INSTRUCTION_COUNT][MAX_OPERAND_COUNT] = {
     {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_NONE}, //MOV
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //JMP  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //CALL TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //RET  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //CMP  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //ADD  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //SUB  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //MULT TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //DIV  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //AND  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //OR   TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //XOR  TODO: it
-    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE}    //NOT  TODO: it
+    {OPERAND_ANY, OPERAND_NONE, OPERAND_NONE},    //JMP
+    {OPERAND_ANY, OPERAND_NONE, OPERAND_NONE},    //CALL
+    {OPERAND_NONE, OPERAND_NONE, OPERAND_NONE},   //RET
+    {OPERAND_ANY, OPERAND_ANY, OPERAND_NONE},     //CMP
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_ANY},  //ADD
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_ANY},  //SUB
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_ANY},  //MULT
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_ANY},  //DIV
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_ANY},  //AND
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_ANY},  //OR
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_ANY},  //XOR
+    {~OPERAND_DIRECT, OPERAND_ANY, OPERAND_NONE}  //NOT
 };
 
 static int process_operand(char *operand, int instindex,
@@ -55,17 +55,51 @@ static int process_operand(char *operand, int instindex,
     return 0;
 }
 
+static int op_is_valid_sub(char *operand, int is_indirect)
+{
+    if (operand[0] == '\0') {
+        return 0;
+    }
+    for (int i = 0; operand[i]; i++) {
+        if ('0' <= operand[i] && operand[i] <= '9') {
+            continue;
+        }
+        if (is_indirect && operand[i] == ']' && operand[i + 1] == '\0') {
+            return 1;
+        }
+        return 0;
+    }
+    return 1;
+}
+
+static int op_is_valid(char *operand)
+{
+    switch (operand[0]) {
+        case 'R':
+            return op_is_valid_sub(&operand[1], 0);
+        case '#':
+            return op_is_valid_sub(&operand[1], 0);
+        case '[':
+            if (operand[1] == '\0' || (operand[1] != 'R' &&
+                operand[1] != '#')) {
+                return 0;
+            }
+            return op_is_valid_sub(&operand[2], 1);
+    }
+    return 0;
+}
+
 static int process_operands(char **warray, int index, int line_index)
 {
     for (int i = 0; i < MAX_OPERAND_COUNT; i++) {
         if (warray[i] == 0 && (operands[index][i] == OPERAND_NONE)) {
             return 0;
         }
-        if (warray[i] == 0 && !(operands[index][i] == OPERAND_NONE)) {
+        if (warray[i] == 0 && (operands[index][i] != OPERAND_NONE)) {
             printf(ERR(ERRMSG_NEOP), instructions[index], line_index);
             return 1;
         }
-        if (process_operand(warray[i], index, i)) {
+        if (!op_is_valid(warray[i]) || process_operand(warray[i], index, i)) {
             printf(ERR(ERRMSG_INVOP), i + 1, warray[i],
                 instructions[index], line_index + 1);
             return 1;
@@ -86,8 +120,7 @@ static int process_instruction(char **warray, int line_index)
             return process_operands(&warray[1], i, line_index);
         }
     }
-    printf(COLOR_ERR"Unknown instruction mnemonic '%s' on line %i.\n"
-        COLOR_DEFAULT, warray[0], line_index + 1);
+    printf(ERR(ERRMSG_UNKINS), warray[0], line_index + 1);
     return 1;
 }
 

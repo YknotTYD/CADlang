@@ -15,6 +15,7 @@
     #define ERRMSG_NEOP "Not enough operands for instruction %s on line %i.\n"
     #define ERRMSG_INVOP_SUB "Invald place %i operand '%s'"
     #define ERRMSG_INVOP ERRMSG_INVOP_SUB" for instruction %s on line %i.\n"
+    #define ERRMSG_UNKINS "Unknown instruction mnemonic '%s' on line %i.\n"
     #define ERR(msg) (COLOR_ERR msg COLOR_DEFAULT)
 
     #define COMMENT_CHAR '/'
@@ -30,9 +31,6 @@
 
     #include <stdio.h>
     #include <string.h>
-
-typedef struct {
-} cads_to_cadbin_context_t;
 
 extern const char *instructions[INSTRUCTION_COUNT];
 extern const int operands[INSTRUCTION_COUNT][MAX_OPERAND_COUNT];
