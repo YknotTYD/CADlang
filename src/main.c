@@ -49,16 +49,20 @@ static char **read_file(const char *filepath)
 int main(void)
 {
     char **file = read_file("temp.cads");
+    cads_context_t cads_context;
 
     if (file == 0) {
-        printf(
-            COLOR_ERR"Coulnd't read file '%s'.\n"COLOR_DEFAULT, "temp.cads");
+        printf(ERR(ERRMSG_FILERR), "temp.cads");
         return 84;
     }
-    parse(file);
-    for (int i = 0; file[i]; i++) {
-        free(file[i]);
+    cads_context.labels = lutils.new_list();
+    if (parse_labels(&cads_context, file)) {
+        free_warray(file);
+        lutils.free_list(cads_context.labels);
+        return 0;
     }
-    free(file);
+    parse(file);
+    free_warray(file);
+    free_labels(&cads_context);
     return 0;
 }
