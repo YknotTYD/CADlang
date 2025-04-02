@@ -11,6 +11,7 @@
 //make str_to_warray take consts;
 //get it on snap;
 //add a docs site;
+//add MOVB
 //make error messages red when !isatty;
 
 static void copy_lines(char *line, char ***file, FILE *stream)
@@ -54,7 +55,7 @@ int main(void)
             COLOR_ERR"Coulnd't read file '%s'.\n"COLOR_DEFAULT, "temp.cads");
         return 84;
     }
-    parse((const char **)file);
+    parse(file);
     for (int i = 0; file[i]; i++) {
         free(file[i]);
     }
