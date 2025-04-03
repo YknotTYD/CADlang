@@ -7,32 +7,33 @@
 
 SRC  = $(shell find -name *.c)
 NAME = cadlang
+DEFAULTARGS = temp.cads
 
 compile:
 	@ gcc -g -Wall -Wextra $(SRC) $(LIBS) \
 		-o $(NAME)
 
 run: compile
-	@ ./$(NAME)
+	@ ./$(NAME)  $(DEFAULTARGS)
 	@ rm $(NAME)
 
 valgrinds: compile
-	@valgrind -s --show-leak-kinds=none \
+	@valgrind -s --show-leak-kinds=all \
 		--track-origins=yes \
 		--track-fds=yes \
 		--leak-check=full \
 		--error-limit=no \
-	./$(NAME)
+	./$(NAME) $(DEFAULTARGS)
 	@ rm $(NAME)
 
 valgrind: compile
-	@valgrind -s --show-leak-kinds=none \
+	@valgrind -s --show-leak-kinds=all \
 		--track-origins=yes \
 		--track-fds=yes \
 		--leak-check=full \
 		--error-limit=no \
 		--quiet \
-	./$(NAME)
+	./$(NAME) $(DEFAULTARGS)
 	@ rm $(NAME)
 
 update: re

@@ -14,55 +14,54 @@
 //add MOVB
 //make error messages red when !isatty;
 
-static void copy_lines(char *line, char ***file, FILE *stream)
+static int parse_error(cads_context_t *cads_context, char **file)
 {
-    size_t len = 0;
-
-    for (int i = 0; getline(&line, &len, stream) != -1; i++) {
-        (*file) = realloc((*file), sizeof(char *) * (i + 2));
-        if ((*file) == 0)
-            return;
-        (*file)[i] = strdup(line);
-        if ((*file)[i] == 0) {
-            free((*file));
-            return;
-        }
-        (*file)[i + 1] = 0;
+    cads_context->labels = lutils.new_list();
+    if (parse_labels(cads_context, file)) {
+        free_warray(file);
+        free_labels(cads_context);
+        return 1;
     }
-    free(line);
-    return;
+    if (parse(file)) {
+        free_warray(file);
+        free_labels(cads_context);
+        return 1;
+    }
+    free_labels(cads_context);
+    return 0;
 }
 
-static char **read_file(const char *filepath)
+static int parse_non_error(cads_context_t *cads_context, char **file)
+{
+    cads_context->labels = lutils.new_list();
+    sanitize(file);
+    if (parse_labels(cads_context, file)) {
+        free_warray(file);
+        free_labels(cads_context);
+        return 1;
+    }
+    return 0;
+}
+
+int main(int argc, char **argv)
 {
     char **file = 0;
-    char *line = 0;
-    FILE *stream = fopen(filepath, "r");
-
-    if (stream == 0)
-        return 0;
-    copy_lines(line, &file, stream);
-    fclose(stream);
-    return file;
-}
-
-int main(void)
-{
-    char **file = read_file("temp.cads");
     cads_context_t cads_context;
 
-    if (file == 0) {
-        printf(ERR(ERRMSG_FILERR), "temp.cads");
+    if (argc < 2) {
+        printf(ERR(ERRMSG_NEARGS));
         return 84;
     }
-    sanitize(file);
-    cads_context.labels = lutils.new_list();
-    if (parse_labels(&cads_context, file)) {
-        free_warray(file);
-        lutils.free_list(cads_context.labels);
-        return 0;
+    file = read_file(argv[1]);
+    if (file == 0) {
+        printf(ERR(ERRMSG_FILERR), argv[1]);
+        return 84;
     }
-    parse(file);
+    remove_comments(file);
+    if (parse_error(&cads_context, file))
+        return 84;
+    if (parse_non_error(&cads_context, file))
+        return 84;
     free_warray(file);
     free_labels(&cads_context);
     return 0;

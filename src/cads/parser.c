@@ -5,7 +5,7 @@
 ** parser.c;
 */
 
-#include "../include/cads_to_cadbin.h"
+#include "../../include/cads_to_cadbin.h"
 
 const char *instructions[INSTRUCTION_COUNT] = {
     "MOV", "JMP",
@@ -140,7 +140,7 @@ static int process_line(char **warray, const int len, const int line_index)
     return 0;
 }
 
-void parse(char **file)
+int parse(char **file)
 {
     char **warray;
     int len;
@@ -149,9 +149,9 @@ void parse(char **file)
         warray = str_to_warray((char *)file[i], &len, ", \t\n");
         if (process_line(warray, len, i)) {
             free_warray(warray);
-            break;
+            return 1;
         }
         free_warray(warray);
     }
-    return;
+    return 0;
 }

@@ -5,7 +5,7 @@
 ** labels.c;
 */
 
-#include "../include/cads_to_cadbin.h"
+#include "../../include/cads_to_cadbin.h"
 
 static int is_valid_label(char *target)
 {
@@ -59,7 +59,8 @@ static int is_duplicate_label(cads_context_t *cads_context,
         current = current->next) {
         cmp = my_strcmp(label, ((label_t *)current->data)->name);
         if (cmp == 0 || cmp == ':') {
-            printf(ERR(ERRMSG_DUPLBL), ((label_t *)current->data)->name, line);
+            printf(ERR(ERRMSG_DUPLBL),
+                ((label_t *)current->data)->name, line + 1);
             return 1;
         }
     }
@@ -110,11 +111,6 @@ int parse_labels(cads_context_t *cads_context, char **file)
             return 1;
         }
         free_warray(warray);
-    }
-    for (node_t *current = cads_context->labels->head; current;
-        current = current->next) {
-        printf("[%s] %i\n", ((label_t *)current->data)->name,
-            ((label_t *)current->data)->line);
     }
     return 0;
 }

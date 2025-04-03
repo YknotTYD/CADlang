@@ -16,10 +16,9 @@
     #define ERRMSG_INVOP_SUB "Invalid place %i operand '%s'"
     #define ERRMSG_INVOP ERRMSG_INVOP_SUB" for instruction %s on line %i.\n"
     #define ERRMSG_UNKINS "Unknown instruction mnemonic '%s' on line %i.\n"
-    #define ERRMSG_FILERR "Coulnd't read file '%s'.\n"
-    #define ERRMSG_EMPLBL "Empty label on line %i\n"
-    #define ERRMSG_INVLBL "Invalid label '%s' on line %i\n"
-    #define ERRMSG_LBLERR "Label error on line %i\n"
+    #define ERRMSG_EMPLBL "Empty label on line %i.\n"
+    #define ERRMSG_INVLBL "Invalid label '%s' on line %i.\n"
+    #define ERRMSG_LBLERR "Label error on line %i.\n"
     #define ERRMSG_DUPLBL "Duplicate label '%s' on line %i.\n"
     #define ERR(msg) (COLOR_ERR msg COLOR_DEFAULT)
 
@@ -60,10 +59,12 @@ char **warray_dup(char **warray);
 void warray_remove_str(char **warray, int i);
 void free_warray(char **warray);
 int my_strcmp(char *str0, char *str1);
+char **read_file(const char *filepath);
 
+void remove_comments(char **file);
 void sanitize(char **file);
 int parse_labels(cads_context_t *cads_context, char **file);
 void free_labels(cads_context_t *cads_context);
-void parse(char **file);
+int parse(char **file);
 
 #endif

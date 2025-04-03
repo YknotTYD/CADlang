@@ -5,7 +5,7 @@
 ** main.c;
 */
 
-#include "../include/main.h"
+#include "../../include/main.h"
 
 static void remove_comments_sub(char *line)
 {
@@ -18,7 +18,7 @@ static void remove_comments_sub(char *line)
     return;
 }
 
-static void remove_comments(char **file)
+void remove_comments(char **file)
 {
     for (int i = 0; file[i]; i++) {
         remove_comments_sub(file[i]);
