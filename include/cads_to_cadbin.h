@@ -13,12 +13,14 @@
     #define COLOR_DEFAULT "\x1b[39m"
 
     #define ERRMSG_NEOP "Not enough operands for instruction %s on line %i.\n"
-    #define ERRMSG_INVOP_SUB "Invald place %i operand '%s'"
+    #define ERRMSG_INVOP_SUB "Invalid place %i operand '%s'"
     #define ERRMSG_INVOP ERRMSG_INVOP_SUB" for instruction %s on line %i.\n"
     #define ERRMSG_UNKINS "Unknown instruction mnemonic '%s' on line %i.\n"
     #define ERRMSG_FILERR "Coulnd't read file '%s'.\n"
     #define ERRMSG_EMPLBL "Empty label on line %i\n"
     #define ERRMSG_INVLBL "Invalid label '%s' on line %i\n"
+    #define ERRMSG_LBLERR "Label error on line %i\n"
+    #define ERRMSG_DUPLBL "Duplicate label '%s' on line %i.\n"
     #define ERR(msg) (COLOR_ERR msg COLOR_DEFAULT)
 
     #define COMMENT_CHAR '/'
@@ -55,8 +57,11 @@ extern const int operands[INSTRUCTION_COUNT][MAX_OPERAND_COUNT];
 
 char **str_to_warray(char *str, int *warray_len, char *seps);
 char **warray_dup(char **warray);
+void warray_remove_str(char **warray, int i);
 void free_warray(char **warray);
+int my_strcmp(char *str0, char *str1);
 
+void sanitize(char **file);
 int parse_labels(cads_context_t *cads_context, char **file);
 void free_labels(cads_context_t *cads_context);
 void parse(char **file);

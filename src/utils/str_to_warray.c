@@ -135,3 +135,22 @@ void free_warray(char **warray)
     free(warray);
     return;
 }
+
+void warray_remove_str(char **warray, int i)
+{
+    char *temp;
+
+    if (warray[i] == 0) {
+        return;
+    }
+    free(warray[i]);
+    for (; warray[i + 1]; i++) {
+        temp = warray[i + 1];
+        warray[i + 1] = warray[i];
+        warray[i] = temp;
+    }
+    temp = warray[i + 1];
+    warray[i + 1] = warray[i];
+    warray[i] = temp;
+    return;
+}

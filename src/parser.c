@@ -140,31 +140,11 @@ static int process_line(char **warray, const int len, const int line_index)
     return 0;
 }
 
-static void remove_comments_sub(char *line)
-{
-    for (int i = 0; line[i]; i++) {
-        if (line[i] == COMMENT_CHAR) {
-            line[i] = '\0';
-            return;
-        }
-    }
-    return;
-}
-
-static void remove_comments(char **file)
-{
-    for (int i = 0; file[i]; i++) {
-        remove_comments_sub(file[i]);
-    }
-    return;
-}
-
 void parse(char **file)
 {
     char **warray;
     int len;
 
-    remove_comments(file);
     for (int i = 0; file[i]; i++) {
         warray = str_to_warray((char *)file[i], &len, ", \t\n");
         if (process_line(warray, len, i)) {

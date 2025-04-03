@@ -55,6 +55,7 @@ int main(void)
         printf(ERR(ERRMSG_FILERR), "temp.cads");
         return 84;
     }
+    sanitize(file);
     cads_context.labels = lutils.new_list();
     if (parse_labels(&cads_context, file)) {
         free_warray(file);
