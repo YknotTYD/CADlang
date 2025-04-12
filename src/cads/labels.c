@@ -24,16 +24,18 @@ static int is_valid_label(char *target)
     return 1;
 }
 
-static int get_label_line(char **warray, int line)
+static int get_label_line(cads_context_t *cads_context,
+    char **warray, int line)
 {
     if (warray[0] == 0) {
         printf(ERR(ERRMSG_LBLERR), line);
         return -1;
     }
     if (warray[1] == 0) {
-        return line + 1;
+        cads_context->lone_label_count++;
+        return line - cads_context->lone_label_count + 1;
     }
-    return line;
+    return line - cads_context->lone_label_count;
 }
 
 static void append_label(list_t *list, char *name, int line)
@@ -84,7 +86,7 @@ static int look_for_label(cads_context_t *cads_context, char *target,
         return 1;
     }
     append_label(cads_context->labels, &target[1],
-        get_label_line(warray, line));
+        get_label_line(cads_context, warray, line));
     return 0;
 }
 
@@ -104,6 +106,7 @@ int parse_labels(cads_context_t *cads_context, char **file)
     char **warray;
     int len;
 
+    cads_context->lone_label_count = 0;
     for (int i = 0; file[i]; i++) {
         warray = str_to_warray(file[i], &len, " \t,\n");
         if (look_for_label(cads_context, warray[0], i, warray)) {

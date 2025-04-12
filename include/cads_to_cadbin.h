@@ -20,6 +20,7 @@
     #define ERRMSG_INVLBL "Invalid label '%s' on line %i.\n"
     #define ERRMSG_LBLERR "Label error on line %i.\n"
     #define ERRMSG_DUPLBL "Duplicate label '%s' on line %i.\n"
+    #define ERRMSG_DUPLBLLINE "Duplicate label line pointing to ASM line %i.\n"
     #define ERR(msg) (COLOR_ERR msg COLOR_DEFAULT)
 
     #define COMMENT_CHAR '/'
@@ -28,6 +29,8 @@
     #define IS_NUM(c)         ((c) >= '0' && (c) <= '9')
     #define IS_ALPHA(c)       (IS_ALPHA_LOWER(c) || IS_ALPHA_UPPER(c))
     #define IS_ALNUM(c)       (IS_ALPHA(c) || IS_NUM(c))
+    #define IS_LABEL_SUB(warray) ((warray)[0][0] == '.' && (warray)[1] == 0)
+    #define IS_LABEL(warray) ((warray) && (warray[0]) && IS_LABEL_SUB(warray))
 
     #define INSTRUCTION_COUNT 13
     #define MAX_OPERAND_COUNT 3
@@ -49,6 +52,8 @@ typedef struct {
 
 typedef struct {
     list_t *labels;
+    char ***file;
+    int lone_label_count;
 } cads_context_t;
 
 extern const char *instructions[INSTRUCTION_COUNT];
@@ -66,5 +71,7 @@ void sanitize(char **file);
 int parse_labels(cads_context_t *cads_context, char **file);
 void free_labels(cads_context_t *cads_context);
 int parse(char **file);
+int load_file(cads_context_t *cads_context, char **file);
+void free_cads_context(cads_context_t *cads_context);
 
 #endif

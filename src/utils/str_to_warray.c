@@ -129,6 +129,9 @@ char **warray_dup(char **warray)
 
 void free_warray(char **warray)
 {
+    if (warray == 0) {
+        return;
+    }
     for (int i = 0; warray[i]; i++) {
         free(warray[i]);
     }
