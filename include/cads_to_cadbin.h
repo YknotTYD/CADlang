@@ -18,6 +18,7 @@
     #define ERRMSG_UNKINS "Unknown instruction mnemonic '%s' on line %i.\n"
     #define ERRMSG_EMPLBL "Empty label on line %i.\n"
     #define ERRMSG_INVLBL "Invalid label '%s' on line %i.\n"
+    #define ERRMSG_UNKLBL "Unknown label '%s' on line %i.\n"
     #define ERRMSG_LBLERR "Label error on line %i.\n"
     #define ERRMSG_DUPLBL "Duplicate label '%s' on line %i.\n"
     #define ERRMSG_DUPLBLLINE "Duplicate label line pointing to ASM line %i.\n"
@@ -34,6 +35,7 @@
 
     #define INSTRUCTION_COUNT 13
     #define MAX_OPERAND_COUNT 3
+    #define MAX_OPERAND_SIZE 8
 
     #define OPERAND_DIRECT   0b001
     #define OPERAND_INDIRECT 0b010
@@ -41,9 +43,24 @@
     #define OPERAND_NONE     0b000
     #define OPERAND_ANY (OPERAND_DIRECT | OPERAND_INDIRECT | OPERAND_REGISTER)
 
+    #define IID_MOV 0
+    #define IID_JMP 1
+    #define IID_CALL 2
+    #define IID_RET 3
+    #define IID_CMP 4
+    #define IID_ADD 5
+    #define IID_SUB 6
+    #define IID_MULT 7
+    #define IID_DIV 8
+    #define IID_AND 9
+    #define IID_OR 10
+    #define IID_XOR 11
+    #define IID_NOT 12
+
     #include <stdio.h>
     #include <string.h>
     #include "lutils.h"
+    #include "main.h"
 
 typedef struct {
     char *name;
@@ -51,10 +68,9 @@ typedef struct {
 } label_t;
 
 typedef struct {
-    list_t *labels;
-    char ***file;
-    int lone_label_count;
-} cads_context_t;
+    unsigned char iid;
+    unsigned char operand_types[MAX_OPERAND_COUNT];
+} instruction_t;
 
 extern const char *instructions[INSTRUCTION_COUNT];
 extern const int operands[INSTRUCTION_COUNT][MAX_OPERAND_COUNT];
@@ -70,7 +86,7 @@ void remove_comments(char **file);
 void sanitize(char **file);
 int parse_labels(cads_context_t *cads_context, char **file);
 void free_labels(cads_context_t *cads_context);
-int parse(char **file);
+int parse(list_t *labels, char **file);
 int load_file(cads_context_t *cads_context, char **file);
 void free_cads_context(cads_context_t *cads_context);
 

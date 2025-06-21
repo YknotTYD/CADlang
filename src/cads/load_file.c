@@ -7,31 +7,18 @@
 
 #include "../../include/main.h"
 
-/*
-for (int aqua0 = 0; (www)[aqua0]; aqua0) {
-    for (int aqua1 = 0; ((www)[aqua0])[aqua1]; aqua1) {
-        printf("'%s' ", ((www)[aqua0])[aqua1]);
-    }
-    printf("\n");
-}
-*/
-
-/*
-for (int aqua0 = 0; (www)[aqua0]; aqua0++) {
-    printf("'%s' ", (www)[aqua0]);
-}
-printf("\n");
-*/
-//for (int aqua0 = 0; (www)[aqua0]; aqua0++){
-//printf("'%s' ", (www)[aqua0]);}printf("\n");
-
-void free_cads_context(cads_context_t *cads_context)
+void free_cads_context(cads_context_t *context)
 {
-    for (int i = 0; cads_context->file[i]; i++) {
-        free_warray(cads_context->file[i]);
+    for (int i = 0; context->file[i]; i++) {
+        free_warray(context->file[i]);
     }
-    free(cads_context->file);
-    free_labels(cads_context);
+    free(context->file);
+    free_labels(context);
+    for (node_t *crnt = context->opcodes->head; crnt; crnt = crnt->next) {
+        free(crnt->data);
+    }
+    lutils.free_list(context->opcodes);
+
     return;
 }
 
@@ -52,24 +39,48 @@ static void remove_labels(char ***file)
     return;
 }
 
-int load_file(cads_context_t *cads_context, char **file)
+int append_code(list_t *opcodes, char **tokens)
+{
+    instruction_t *instruction = malloc(sizeof(instruction_t));
+
+    for (int i = 0; i < INSTRUCTION_COUNT; i++) {
+        if (my_strcmp(tokens[0], (char *)instructions[i]) == 0) {
+            instruction->iid = i;
+            break;
+        }
+    }
+    tokens++;
+    for (int i = 0; i < MAX_OPERAND_COUNT; i++) {
+        instruction->operand_types[i] = OPERAND_NONE;
+        if (tokens[i] == 0)
+            return CATASTROPHIC_FAILURE;
+        else if (tokens[i][0] == 'R')
+            instruction->operand_types[i] =  OPERAND_REGISTER;
+        else if (tokens[i][0] == '#')
+            instruction->operand_types[i] =  OPERAND_DIRECT;
+        else if (tokens[i][0] == '[')
+            instruction->operand_types[i] =  OPERAND_INDIRECT;
+    }
+    lutils.append(opcodes, instruction);
+    return 0;
+}
+
+int load_file(cads_context_t *context, char **file)
 {
     char **warray;
     int len;
 
     for (len = 0; file[len]; len++);
-    cads_context->file = malloc(sizeof(char **) * (len + 1));
+    context->file = malloc(sizeof(char **) * (len + 1));
     for (int i = 0; file[i]; i++) {
         warray = str_to_warray(file[i], (int[]){0}, " \t,\n");
-        cads_context->file[i] = warray;
-        cads_context->file[i + 1] = 0;
+        context->file[i] = warray;
+        context->file[i + 1] = 0;
     }
-    remove_labels(cads_context->file);
-    for (int i = 0; cads_context->file[i]; i++) {
-        for (int aqua0 = 0; (cads_context->file[i])[aqua0]; aqua0++) {
-            printf("'%s' ", (cads_context->file[i])[aqua0]);
-        }
-        printf("\n");
+    remove_labels(context->file);
+    context->opcodes = lutils.new_list();
+    for (int i = 0; context->file[i]; i++) {
+        append_code(context->opcodes, context->file[i]);
     }
     return 0;
 }

@@ -25,7 +25,7 @@ static int parse_error(cads_context_t *cads_context, char **file)
         free_labels(cads_context);
         return 1;
     }
-    if (parse(file)) {
+    if (parse(cads_context->labels, file)) {
         free_warray(file);
         free_labels(cads_context);
         return 1;
@@ -57,7 +57,7 @@ static int parse_non_error(cads_context_t *cads_context, char **file)
     for (node_t *current = cads_context->labels->head; current;
         current = current->next) {
         printf("%s %i\n", ((label_t *)current->data)->name,
-            ((label_t *)current->data)->line);
+            ((label_t *)current->data)->line); //TODO: RMTHS
         if (is_duplicate_line(current->data, cads_context->labels)) {
             dprintf(2, ERR(ERRMSG_DUPLBLLINE),
                 ((label_t *)current->data)->line + 1);
@@ -88,12 +88,14 @@ int main(int argc, char **argv)
     char **file = 0;
     cads_context_t cads_context;
 
-    if (load_and_check(&file, argc, argv))
+    if (load_and_check(&file, argc, argv)) {
         return 84;
+    }
     remove_comments(file);
     if (parse_error(&cads_context, file) ||
-        parse_non_error(&cads_context, file))
+        parse_non_error(&cads_context, file)) {
         return 84;
+    }
     load_file(&cads_context, file);
     free_cads_context(&cads_context);
     free_warray(file);

@@ -72,34 +72,56 @@ static int op_is_valid_sub(char *operand, int is_indirect)
     return 1;
 }
 
-static int op_is_valid(char *operand)
+static int is_label(list_t *labels, char *operand, int line)
+{
+    (void)labels;
+    if (operand[0] != '.') {
+        return 0;
+    }
+    if (operand[1] == '\0') {
+        printf(ERR(ERRMSG_EMPLBL), line);
+        return 0;
+    }
+    for (node_t *current = labels->head; current; current = current->next) {
+        if (my_strcmp(&operand[1], ((label_t *)current->data)->name) == 0) {
+            return 1;
+        }
+    }
+    printf(ERR(ERRMSG_UNKLBL), &operand[1], line);
+    return 0;
+}
+
+static int op_is_valid(list_t *labels, char *operand, int line)
 {
     switch (operand[0]) {
         case 'R':
             return op_is_valid_sub(&operand[1], 0);
         case '#':
-            return op_is_valid_sub(&operand[1], 0);
+            return op_is_valid_sub(&operand[1], 0) ||
+                is_label(labels, &operand[1], line);
         case '[':
             if (operand[1] == '\0' || (operand[1] != 'R' &&
                 operand[1] != '#')) {
                 return 0;
             }
-            return op_is_valid_sub(&operand[2], 1);
+            return op_is_valid_sub(&operand[2], 1) ||
+                is_label(labels, &operand[2], line);
     }
     return 0;
 }
 
-static int process_operands(char **warray, int index, int line_index)
+static int process_operands(list_t *labels, char **warray,
+    int index, int line_index)
 {
     for (int i = 0; i < MAX_OPERAND_COUNT; i++) {
-        if (warray[i] == 0 && (operands[index][i] == OPERAND_NONE)) {
+        if (warray[i] == 0 && (operands[index][i] == OPERAND_NONE))
             return 0;
-        }
         if (warray[i] == 0 && (operands[index][i] != OPERAND_NONE)) {
             printf(ERR(ERRMSG_NEOP), instructions[index], line_index);
             return 1;
         }
-        if (!op_is_valid(warray[i]) || process_operand(warray[i], index, i)) {
+        if (!op_is_valid(labels, warray[i], line_index) ||
+            process_operand(warray[i], index, i)) {
             printf(ERR(ERRMSG_INVOP), i + 1, warray[i],
                 instructions[index], line_index + 1);
             return 1;
@@ -113,18 +135,19 @@ static int process_operands(char **warray, int index, int line_index)
     return 0;
 }
 
-static int process_instruction(char **warray, int line_index)
+static int process_instruction(list_t *labels, char **warray, int line_index)
 {
     for (int i = 0; i < INSTRUCTION_COUNT; i++) {
         if (strcmp(warray[0], instructions[i]) == 0) {
-            return process_operands(&warray[1], i, line_index);
+            return process_operands(labels, &warray[1], i, line_index);
         }
     }
     printf(ERR(ERRMSG_UNKINS), warray[0], line_index + 1);
     return 1;
 }
 
-static int process_line(char **warray, const int len, const int line_index)
+static int process_line(list_t *labels, char **warray,
+    const int len, const int line_index)
 {
     (void)len;
     if (warray[0] == 0) {
@@ -132,22 +155,22 @@ static int process_line(char **warray, const int len, const int line_index)
     }
     if (warray[0][0] == '.') {
         if (warray[1]) {
-            return process_instruction(&warray[1], line_index);
+            return process_instruction(labels, &warray[1], line_index);
         }
     } else {
-        return process_instruction(warray, line_index);
+        return process_instruction(labels, warray, line_index);
     }
     return 0;
 }
 
-int parse(char **file)
+int parse(list_t *labels, char **file)
 {
     char **warray;
     int len;
 
     for (int i = 0; file[i]; i++) {
         warray = str_to_warray((char *)file[i], &len, ", \t\n");
-        if (process_line(warray, len, i)) {
+        if (process_line(labels, warray, len, i)) {
             free_warray(warray);
             return 1;
         }

@@ -1,0 +1,19 @@
+//notes
+
+@Binary Layout;
+
+BIN:
+    HEADER (SIZEOF(HEADER))
+    INST#0 (SIZEOF(INST#0))
+    .
+    .
+    .
+    INST#(INST_COUNT - 1) (SIZEOF(INST#(INST_COUNT - 1)))
+
+INST:
+
+    0000_0000 0000_0000(_) ... (_)0000_0000    ((0000_0000) * SIZEOF(type)) __
+    |_______| |_______|           |_______|    ( |_______|)                   |
+        |         ||                 ||        (     |    )                   | * MAX_ARG_NUMBER
+      Instr    Optype#0           Optype#n     (  Operand ) __________________|
+
