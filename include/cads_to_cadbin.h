@@ -45,6 +45,8 @@
     #define OPERAND_NONE     0b000
     #define OPERAND_ANY (OPERAND_DIRECT | OPERAND_INDIRECT | OPERAND_REGISTER)
 
+    #define OP_TO_CHAR "N#[ R"
+
     #define IID_MOV 0
     #define IID_JMP 1
     #define IID_CALL 2
@@ -58,6 +60,9 @@
     #define IID_OR 10
     #define IID_XOR 11
     #define IID_NOT 12
+
+    #define SHEBANG "#!/usr/bin/env cadlang\n"
+    #define SHEBANG_LEN 23
 
     #include <stdio.h>
     #include <string.h>
@@ -74,6 +79,10 @@ typedef struct {
     unsigned char operand_types[MAX_OPERAND_COUNT];
     unsigned char operand_values[MAX_OPERAND_COUNT][MAX_VALUE_SIZE];
 } instruction_t;
+
+typedef struct {
+    char shebang[SHEBANG_LEN];
+} header_t;
 
 extern const char *instructions[INSTRUCTION_COUNT];
 extern const int operands[INSTRUCTION_COUNT][MAX_OPERAND_COUNT];

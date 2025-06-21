@@ -14,6 +14,7 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include <fcntl.h>
     #include "vm.h"
     #include "cads_to_cadbin.h"
 

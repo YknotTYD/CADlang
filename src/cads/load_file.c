@@ -18,7 +18,6 @@ void free_cads_context(cads_context_t *context)
         free(crnt->data);
     }
     lutils.free_list(context->opcodes);
-
     return;
 }
 
@@ -42,16 +41,14 @@ static void remove_labels(char ***file)
 //TODO: LOAD SMTHGELSTHN INTS
 //TODO: HANDLE LABELS
 static int copy_operand_value(unsigned char *value, char *token)
-{
-    
+{    
     int temp;
 
     if (my_getnbr(&token[1], &temp) || MAX_VALUE_SIZE != sizeof(int)) {
         return CATASTROPHIC_FAILURE;
     }
-    printf("%i %s\n", temp, token);
     for (int i = 0; i < MAX_VALUE_SIZE; i++) {
-        value[0] = ((char *)&temp)[i];
+        value[i] = ((char *)&temp)[i];
     }
     return 0;
 }
