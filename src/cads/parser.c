@@ -61,7 +61,10 @@ static int op_is_valid_sub(char *operand, int is_indirect)
         return 0;
     }
     for (int i = 0; operand[i]; i++) {
-        if ('0' <= operand[i] && operand[i] <= '9') {
+        if (('0' <= operand[i] && operand[i] <= '9')) {
+            continue;
+        }
+        if (operand[i] == '-') {
             continue;
         }
         if (is_indirect && operand[i] == ']' && operand[i + 1] == '\0') {

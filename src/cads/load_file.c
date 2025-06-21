@@ -39,7 +39,24 @@ static void remove_labels(char ***file)
     return;
 }
 
-int append_code(list_t *opcodes, char **tokens)
+//TODO: LOAD SMTHGELSTHN INTS
+//TODO: HANDLE LABELS
+static int copy_operand_value(unsigned char *value, char *token)
+{
+    
+    int temp;
+
+    if (my_getnbr(&token[1], &temp) || MAX_VALUE_SIZE != sizeof(int)) {
+        return CATASTROPHIC_FAILURE;
+    }
+    printf("%i %s\n", temp, token);
+    for (int i = 0; i < MAX_VALUE_SIZE; i++) {
+        value[0] = ((char *)&temp)[i];
+    }
+    return 0;
+}
+
+static int append_code(list_t *opcodes, char **tokens)
 {
     instruction_t *instruction = malloc(sizeof(instruction_t));
 
@@ -52,14 +69,18 @@ int append_code(list_t *opcodes, char **tokens)
     tokens++;
     for (int i = 0; i < MAX_OPERAND_COUNT; i++) {
         instruction->operand_types[i] = OPERAND_NONE;
-        if (tokens[i] == 0)
-            return CATASTROPHIC_FAILURE;
-        else if (tokens[i][0] == 'R')
+        for (int j = 0; j < MAX_VALUE_SIZE; j++) {
+            instruction->operand_values[i][j] = 0;
+        }
+    }
+    for (int i = 0; tokens[i]; i++) {
+        if (tokens[i][0] == 'R')
             instruction->operand_types[i] =  OPERAND_REGISTER;
         else if (tokens[i][0] == '#')
             instruction->operand_types[i] =  OPERAND_DIRECT;
         else if (tokens[i][0] == '[')
             instruction->operand_types[i] =  OPERAND_INDIRECT;
+        copy_operand_value(instruction->operand_values[i], tokens[i]);
     }
     lutils.append(opcodes, instruction);
     return 0;

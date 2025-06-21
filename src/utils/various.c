@@ -50,3 +50,28 @@ char **read_file(const char *filepath)
     fclose(stream);
     return file;
 }
+
+int my_getnbr(char *str, int *dest)
+{
+    int is_neg = 0;
+
+    if (str == 0 || dest == 0) {
+        return 1;
+    }
+    if (str[0] == '-') {
+        is_neg = 1;
+        str++;
+    }
+    for (int j = 0; str[j]; j++) {
+        if ('0' <= str[j] || str[j] <= '9')
+            continue;
+        return 1;
+    }
+    (*dest) = 0;
+    for (int i = 0; str[i]; i++) {
+        (*dest) *= 10;
+        (*dest) += str[i] - '0';
+    }
+    (*dest) = is_neg ? -(*dest) : (*dest);
+    return 0;
+}

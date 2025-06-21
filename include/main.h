@@ -20,7 +20,7 @@
     #define ERRMSG_FILERR "Coulnd't read file '%s'.\n"
     #define ERRMSG_NEARGS "Not enough arguments given.\n"
 
-    #define CATASTROPHIC_FAILURE (exit(5028841), 5028841)
+    #define CATASTROPHIC_FAILURE (exit(36), 36)
 
 typedef struct cads_context_s{
     list_t *labels;

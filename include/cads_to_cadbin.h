@@ -35,7 +35,9 @@
 
     #define INSTRUCTION_COUNT 13
     #define MAX_OPERAND_COUNT 3
-    #define MAX_OPERAND_SIZE 8
+
+    #define INT_SIZE 4
+    #define MAX_VALUE_SIZE INT_SIZE
 
     #define OPERAND_DIRECT   0b001
     #define OPERAND_INDIRECT 0b010
@@ -70,6 +72,7 @@ typedef struct {
 typedef struct {
     unsigned char iid;
     unsigned char operand_types[MAX_OPERAND_COUNT];
+    unsigned char operand_values[MAX_OPERAND_COUNT][MAX_VALUE_SIZE];
 } instruction_t;
 
 extern const char *instructions[INSTRUCTION_COUNT];
@@ -81,6 +84,7 @@ void warray_remove_str(char **warray, int i);
 void free_warray(char **warray);
 int my_strcmp(char *str0, char *str1);
 char **read_file(const char *filepath);
+int my_getnbr(char *str, int *dest);
 
 void remove_comments(char **file);
 void sanitize(char **file);

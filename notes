@@ -16,4 +16,3 @@ INST:
     |_______| |_______|           |_______|    ( |_______|)                   |
         |         ||                 ||        (     |    )                   | * MAX_ARG_NUMBER
       Instr    Optype#0           Optype#n     (  Operand ) __________________|
-
