@@ -82,7 +82,7 @@ static int is_label(list_t *labels, char *operand, int line)
         return 0;
     }
     if (operand[1] == '\0') {
-        printf(ERR(ERRMSG_EMPLBL), line);
+        dprintf(2, ERR(ERRMSG_EMPLBL), line);
         return 0;
     }
     for (node_t *current = labels->head; current; current = current->next) {
@@ -90,7 +90,7 @@ static int is_label(list_t *labels, char *operand, int line)
             return 1;
         }
     }
-    printf(ERR(ERRMSG_UNKLBL), &operand[1], line);
+    dprintf(2, ERR(ERRMSG_UNKLBL), &operand[1], line);
     return 0;
 }
 
@@ -120,18 +120,18 @@ static int process_operands(list_t *labels, char **warray,
         if (warray[i] == 0 && (operands[index][i] == OPERAND_NONE))
             return 0;
         if (warray[i] == 0 && (operands[index][i] != OPERAND_NONE)) {
-            printf(ERR(ERRMSG_NEOP), instructions[index], line_index);
+            dprintf(2, ERR(ERRMSG_NEOP), instructions[index], line_index);
             return 1;
         }
         if (!op_is_valid(labels, warray[i], line_index) ||
             process_operand(warray[i], index, i)) {
-            printf(ERR(ERRMSG_INVOP), i + 1, warray[i],
+            dprintf(2, ERR(ERRMSG_INVOP), i + 1, warray[i],
                 instructions[index], line_index + 1);
             return 1;
         }
     }
     if (warray[MAX_OPERAND_COUNT]) {
-        printf(ERR(ERRMSG_INVOP), MAX_OPERAND_COUNT + 1,
+        dprintf(2, ERR(ERRMSG_INVOP), MAX_OPERAND_COUNT + 1,
             warray[MAX_OPERAND_COUNT], instructions[index], line_index + 1);
         return 1;
     }
@@ -145,7 +145,7 @@ static int process_instruction(list_t *labels, char **warray, int line_index)
             return process_operands(labels, &warray[1], i, line_index);
         }
     }
-    printf(ERR(ERRMSG_UNKINS), warray[0], line_index + 1);
+    dprintf(2, ERR(ERRMSG_UNKINS), warray[0], line_index + 1);
     return 1;
 }
 

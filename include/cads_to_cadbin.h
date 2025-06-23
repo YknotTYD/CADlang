@@ -9,7 +9,7 @@
 
     #define CADLANG_ASM_COMPILER_H
 
-    #define COLOR_ERR     "\x1b[38;2;255;75;75m"
+    #define COLOR_ERR "\x1b[38;2;255;75;75m"
     #define COLOR_DEFAULT "\x1b[39m\n"
 
     #define ERRMSG_NEOP "Not enough operands for instruction %s on line %i."
@@ -22,7 +22,7 @@
     #define ERRMSG_LBLERR "Label error on line %i."
     #define ERRMSG_DUPLBL "Duplicate label '%s' on line %i."
     #define ERRMSG_DUPLBLLINE "Duplicate label line pointing to ASM line %i."
-    #define ERR(msg) (COLOR_ERR msg COLOR_DEFAULT)//COLOR_DEFAULT)
+    #define ERR(msg) (isatty(2) ? (COLOR_ERR msg COLOR_DEFAULT) : (msg "\n"))
 
     #define COMMENT_CHAR '/'
     #define IS_ALPHA_LOWER(c) ((c) >= 'a' && (c) <= 'z')

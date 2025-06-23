@@ -28,7 +28,7 @@ static int get_label_line(cads_context_t *cads_context,
     char **warray, int line)
 {
     if (warray[0] == 0) {
-        printf(ERR(ERRMSG_LBLERR), line);
+        dprintf(2, ERR(ERRMSG_LBLERR), line);
         return -1;
     }
     if (warray[1] == 0) {
@@ -61,7 +61,7 @@ static int is_duplicate_label(cads_context_t *cads_context,
         current = current->next) {
         cmp = my_strcmp(label, ((label_t *)current->data)->name);
         if (cmp == 0 || cmp == ':') {
-            printf(ERR(ERRMSG_DUPLBL),
+            dprintf(2, ERR(ERRMSG_DUPLBL),
                 ((label_t *)current->data)->name, line + 1);
             return 1;
         }
@@ -75,11 +75,11 @@ static int look_for_label(cads_context_t *cads_context, char *target,
     if (target == 0 || target[0] == '\0' || target[0] != '.')
         return 0;
     if (target[1] == '\0' || target[1] == ':') {
-        printf(ERR(ERRMSG_EMPLBL), line + 1);
+        dprintf(2, ERR(ERRMSG_EMPLBL), line + 1);
         return 1;
     }
     if (!is_valid_label(&target[1])) {
-        printf(ERR(ERRMSG_INVLBL), target, line);
+        dprintf(2, ERR(ERRMSG_INVLBL), target, line);
         return 1;
     }
     if (is_duplicate_label(cads_context, &target[1], line)) {

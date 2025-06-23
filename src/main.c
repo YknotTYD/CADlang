@@ -7,16 +7,13 @@
 
 #include "../include/main.h"
 
-//put error messages in stderr;
 //make str_to_warray take consts;
 //get it on snap;
 //add a docs site;
 //add MOVB;
-//add labels to compilation;
-//make error messages red when !isatty;
-//make it so that two labels can't belong to the same line;
 //add error handling for labels pointing on nothing;
 //find a way not to cast everything to ints
+//check for overflows in the ASM
 
 //TODO: make INDIRECTS unable to be REGS
 
@@ -81,12 +78,12 @@ static int parse_non_error(cads_context_t *cads_context, char **file)
 static int load_and_check(char ***file, int argc, char **argv)
 {
     if (argc < 2) {
-        printf(ERR(ERRMSG_NEARGS));
+        dprintf(2, ERR(ERRMSG_NEARGS));
         return 1;
     }
     *file = read_file(argv[1]);
     if (*file == 0) {
-        printf(ERR(ERRMSG_FILERR), argv[1]);
+        dprintf(2, ERR(ERRMSG_FILERR), argv[1]);
         return 1;
     }
     return 0;
@@ -115,7 +112,7 @@ static int dump_binary(cads_context_t *context, char *filepath)
     int fd = open(filepath, O_CREAT | O_WRONLY | O_TRUNC, 0755);
 
     if (fd == -1) {
-        printf(ERR(ERRMSG_FILERRCREAT), filepath);
+        dprintf(2, ERR(ERRMSG_FILERRCREAT), filepath);
         return 1;
     }
     write(fd, SHEBANG, sizeof(SHEBANG) - 1);
