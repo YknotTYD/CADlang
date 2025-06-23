@@ -3,7 +3,8 @@
 @Binary Layout;
 
 BIN:
-    HEADER (SIZEOF(HEADER))
+
+    HEADER (SIZEOF(HEADER)) //SHEBANG - '\0'
     INST#0 (SIZEOF(INST#0))
     .
     .
@@ -12,7 +13,15 @@ BIN:
 
 INST:
 
-    0000_0000 0000_0000(_) ... (_)0000_0000    ((0000_0000) * SIZEOF(type)) __
-    |_______| |_______|           |_______|    ( |_______|)                   |
-        |         ||                 ||        (     |    )                   | * MAX_ARG_NUMBER
-      Instr    Optype#0           Optype#n     (  Operand ) __________________|
+    0000_0000 0000_0000(_) ... (_)0000_0000                       ((0000_0000) * SIZEOF(type)) __ //SIZEOF(type)->MAX_VALUE_SIZE
+    |_______| |_______|           |_______|                       ( |_______|)                   |
+        |         ||                 ||                           (     |    )                   | * MAX_ARG_NUMBER
+      Instr    Optype#0           Optype#(MAX_ARG_NUMBER - 1)     (  Operand ) __________________|
+
+//pass
+
+MEMORY LAYOUT:
+
+    [0000_0000...0000_0000 - 0000_0000...0000_0000]
+             STACK                   HEAP
+                           ?

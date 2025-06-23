@@ -140,6 +140,7 @@ int main(int argc, char **argv)
     load_file(&context, file);
     print_instructions(&context);
     dump_binary(&context, "test.cadb");
+    load_vm(&context, "test.cadb");
     free_cads_context(&context);
     free_warray(file);
     return 0;

@@ -75,3 +75,14 @@ int my_getnbr(char *str, int *dest)
     (*dest) = is_neg ? -(*dest) : (*dest);
     return 0;
 }
+
+int my_memcpy(void *dest, void *src, int n)
+{
+    if (src == 0 || dest == 0 || n <= 0) {
+        return 1;
+    }
+    for (int i = 0; i < n; i++) {
+        ((char *)dest)[i] = ((char *)src)[i];
+    }
+    return 0;
+}

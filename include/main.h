@@ -29,6 +29,7 @@ typedef struct cads_context_s{
     list_t *opcodes;
     char ***file;
     int lone_label_count;
+    cadlangvm_t vm;
 } cads_context_t;
 
 #endif

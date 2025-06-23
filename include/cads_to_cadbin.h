@@ -94,6 +94,7 @@ void free_warray(char **warray);
 int my_strcmp(char *str0, char *str1);
 char **read_file(const char *filepath);
 int my_getnbr(char *str, int *dest);
+int my_memcpy(void *dest, void *src, int n);
 
 void remove_comments(char **file);
 void sanitize(char **file);
