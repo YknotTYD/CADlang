@@ -90,7 +90,6 @@ static int op_mov_load_arg(exec_data_t *exec_data,
             return 1;
         exec_data->op_func = is_r ? op_mov_rr : op_mov_mr;
         exec_data->arg1 = &exec_data->vm->regs[VALUE_TO_INT(instruction, 1)];
-        printf("%i %i %s\n", VALUE_TO_INT(instruction, 0), VALUE_TO_INT(instruction, 1), is_r ? "r" : "m");
     } else if (instruction->operand_types[1] == OPERAND_INDIRECT) {
         exec_data->op_func = is_r ? op_mov_rm : op_mov_mm;
     } else if (instruction->operand_types[1] == OPERAND_DIRECT) {

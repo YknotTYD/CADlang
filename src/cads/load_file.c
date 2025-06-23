@@ -43,14 +43,20 @@ static int get_indirect_token_value(char *token, int *n)
 {
     int return_value;
     int len;
+    int ends_with_it;
 
     for (len = 0; token[len]; len++);
-    if (len <= 3 || token[len - 1] != ']') {
-        CATASTROPHIC_OVERSIGHT;
+    if (len <= 2) {
+        return CATASTROPHIC_FAILURE;
     }
-    token[len - 1] = '\0';
+    ends_with_it = token[len - 1] == ']';
+    if (ends_with_it) {
+        token[len - 1] = '\0';
+    }
     return_value = my_getnbr(&token[2], n);
-    token[len - 1] = ']';
+    if (ends_with_it) {
+        token[len - 1] = ']';
+    }
     return return_value;
 }
 
@@ -75,7 +81,6 @@ static int get_token_value(char *token, int *n, list_t *labels)
 }
 
 //TODO: LOAD SMTHGELSTHN INTS
-//TODO: HANDLE LABELS
 static int copy_operand_value(unsigned char *value, char *token,
     list_t *labels)
 {    

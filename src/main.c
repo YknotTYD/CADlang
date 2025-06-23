@@ -18,7 +18,7 @@
 //add error handling for labels pointing on nothing;
 //find a way not to cast everything to ints
 
-//make INDIRECTS unable to be REGS
+//TODO: make INDIRECTS unable to be REGS
 
 static void __attribute__((__destructor__)) close_std(void)
 {

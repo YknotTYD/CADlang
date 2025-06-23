@@ -103,7 +103,7 @@ static int op_is_valid(list_t *labels, char *operand, int line)
             return op_is_valid_sub(&operand[1], 0) ||
                 is_label(labels, &operand[1], line);
         case '[':
-            if (operand[1] == '\0' || (operand[1] != 'R' &&
+            if (operand[1] == '\0' || (operand[1] != '#' &&
                 operand[1] != '#')) {
                 return 0;
             }
