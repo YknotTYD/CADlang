@@ -43,6 +43,10 @@ typedef struct {
     int clock;
 } cadlangvm_t;
 
+typedef int (*op_func)(cadlangvm_t *vm, void *arg0, void *arg1, void *arg2);
+
 int load_vm(cads_context_t *context, char *filepath);
 
 #endif
+
+
