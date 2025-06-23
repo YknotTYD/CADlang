@@ -63,5 +63,6 @@ int load_vm(cads_context_t *context, char *filepath)
     for (int i = 0; i < len; i++) {
         load_exec_data(&context->vm, &exec_data[i], &instructions_data[i]);
     }
+    free(exec_data);
     return 0;
 }
