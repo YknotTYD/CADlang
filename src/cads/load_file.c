@@ -38,13 +38,31 @@ static void remove_labels(char ***file)
     return;
 }
 
+static int get_token_value(char *token, int *n, list_t *labels)
+{
+    if (token == 0) {
+        return 1;
+    }
+    if (token[1] != '.') {
+        return my_getnbr(&token[1], n);
+    }
+    for (node_t *current = labels->head; current; current = current->next) {
+        if (my_strcmp(((label_t *)current->data)->name, &token[2]) == 0) {
+            *n = ((label_t *)current->data)->line;
+            return 0;
+        }
+    }
+    return 0;
+}
+
 //TODO: LOAD SMTHGELSTHN INTS
 //TODO: HANDLE LABELS
-static int copy_operand_value(unsigned char *value, char *token)
+static int copy_operand_value(unsigned char *value, char *token,
+    list_t *labels)
 {    
     int temp;
 
-    if (my_getnbr(&token[1], &temp) || MAX_VALUE_SIZE != sizeof(int)) {
+    if (get_token_value(token, &temp, labels) || MAX_VALUE_SIZE != sizeof(int)) {
         return CATASTROPHIC_FAILURE;
     }
     for (int i = 0; i < MAX_VALUE_SIZE; i++) {
@@ -53,7 +71,7 @@ static int copy_operand_value(unsigned char *value, char *token)
     return 0;
 }
 
-static int append_code(list_t *opcodes, char **tokens)
+static int append_code(list_t *opcodes, char **tokens, list_t *labels)
 {
     instruction_t *instruction = malloc(sizeof(instruction_t));
 
@@ -77,7 +95,7 @@ static int append_code(list_t *opcodes, char **tokens)
             instruction->operand_types[i] =  OPERAND_DIRECT;
         else if (tokens[i][0] == '[')
             instruction->operand_types[i] =  OPERAND_INDIRECT;
-        copy_operand_value(instruction->operand_values[i], tokens[i]);
+        copy_operand_value(instruction->operand_values[i], tokens[i], labels);
     }
     lutils.append(opcodes, instruction);
     return 0;
@@ -98,7 +116,7 @@ int load_file(cads_context_t *context, char **file)
     remove_labels(context->file);
     context->opcodes = lutils.new_list();
     for (int i = 0; context->file[i]; i++) {
-        append_code(context->opcodes, context->file[i]);
+        append_code(context->opcodes, context->file[i], context->labels);
     }
     return 0;
 }

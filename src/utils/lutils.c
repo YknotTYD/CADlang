@@ -132,8 +132,29 @@ static void free_list(list_t *list)
     return;
 }
 
+static void *search(
+    list_t *list, int (*func)(),
+    void *arg2, int target)
+{
+    if (list == 0) {
+        return 0;
+    }
+    for (node_t *current = list->head; current; current = current->next) {
+        if (arg2 && (func(current->data, arg2) == target)) {
+            return current->data;
+        }
+        if (arg2) {
+            continue;
+        }
+        if (func(current->data) == target) {
+            return current->data;
+        }
+    }
+    return 0;
+}
+
 const lutils_t lutils = {
     new_list, append, pop,
     pop_index, swap_nodes_data, sort,
-    free_list
+    free_list, search
 };

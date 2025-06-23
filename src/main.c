@@ -17,6 +17,14 @@
 //make it so that two labels can't belong to the same line;
 //add error handling for labels pointing on nothing;
 
+static void __attribute__((__destructor__)) close_std(void)
+{
+    for (int i = 0; i < 3; i++) {
+        close(i);
+    }
+    return;
+}
+
 static int parse_error(cads_context_t *cads_context, char **file)
 {
     cads_context->labels = lutils.new_list();
@@ -99,17 +107,21 @@ static void print_instructions(cads_context_t *context)
     return;
 }
 
-static void dump_binary(cads_context_t *context, char *filepath)
+static int dump_binary(cads_context_t *context, char *filepath)
 {
     int fd = open(filepath, O_CREAT | O_WRONLY | O_TRUNC, 0755);
 
+    if (fd == -1) {
+        printf(ERR(ERRMSG_FILERRCREAT), filepath);
+        return 1;
+    }
     write(fd, SHEBANG, sizeof(SHEBANG) - 1);
     for (node_t *current = context->opcodes->head;
         current; current = current->next) {
         write(fd, current->data, sizeof(instruction_t));
     }
     close(fd);
-    return;
+    return 0;
 }
 
 int main(int argc, char **argv)
@@ -127,7 +139,7 @@ int main(int argc, char **argv)
     }
     load_file(&context, file);
     print_instructions(&context);
-    dump_binary(&context, "test.cad");
+    dump_binary(&context, "test.cadb");
     free_cads_context(&context);
     free_warray(file);
     return 0;

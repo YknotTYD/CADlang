@@ -32,6 +32,7 @@ typedef struct {
     void (*sort)(list_t *list, int (*cmp_func)(void *, void *),
         int is_ascending);
     void (*free_list)(list_t *list);
+    void *(*search)(list_t *list, int (*func)(), void *arg2, int target);
 } lutils_t;
 
 extern const lutils_t lutils;
