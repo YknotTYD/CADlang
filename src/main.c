@@ -11,11 +11,10 @@
 //get it on snap;
 //add a docs site;
 //add MOVB;
-//add error handling for labels pointing on nothing;
-//find a way not to cast everything to ints
+//find a better way than to cast everything to ints
 //check for overflows in the ASM
 
-//TODO: make INDIRECTS unable to be REGS
+//TODO: add error handling for labels pointing on nothing;
 
 static void __attribute__((__destructor__)) close_std(void)
 {
