@@ -10,19 +10,19 @@
     #define CADLANG_ASM_COMPILER_H
 
     #define COLOR_ERR     "\x1b[38;2;255;75;75m"
-    #define COLOR_DEFAULT "\x1b[39m"
+    #define COLOR_DEFAULT "\x1b[39m\n"
 
-    #define ERRMSG_NEOP "Not enough operands for instruction %s on line %i.\n"
+    #define ERRMSG_NEOP "Not enough operands for instruction %s on line %i."
     #define ERRMSG_INVOP_SUB "Invalid place %i operand '%s'"
-    #define ERRMSG_INVOP ERRMSG_INVOP_SUB" for instruction %s on line %i.\n"
-    #define ERRMSG_UNKINS "Unknown instruction mnemonic '%s' on line %i.\n"
-    #define ERRMSG_EMPLBL "Empty label on line %i.\n"
-    #define ERRMSG_INVLBL "Invalid label '%s' on line %i.\n"
-    #define ERRMSG_UNKLBL "Unknown label '%s' on line %i.\n"
-    #define ERRMSG_LBLERR "Label error on line %i.\n"
-    #define ERRMSG_DUPLBL "Duplicate label '%s' on line %i.\n"
-    #define ERRMSG_DUPLBLLINE "Duplicate label line pointing to ASM line %i.\n"
-    #define ERR(msg) (COLOR_ERR msg COLOR_DEFAULT)
+    #define ERRMSG_INVOP ERRMSG_INVOP_SUB" for instruction %s on line %i."
+    #define ERRMSG_UNKINS "Unknown instruction mnemonic '%s' on line %i."
+    #define ERRMSG_EMPLBL "Empty label on line %i."
+    #define ERRMSG_INVLBL "Invalid label '%s' on line %i."
+    #define ERRMSG_UNKLBL "Unknown label '%s' on line %i."
+    #define ERRMSG_LBLERR "Label error on line %i."
+    #define ERRMSG_DUPLBL "Duplicate label '%s' on line %i."
+    #define ERRMSG_DUPLBLLINE "Duplicate label line pointing to ASM line %i."
+    #define ERR(msg) (COLOR_ERR msg COLOR_DEFAULT)//COLOR_DEFAULT)
 
     #define COMMENT_CHAR '/'
     #define IS_ALPHA_LOWER(c) ((c) >= 'a' && (c) <= 'z')

@@ -19,9 +19,9 @@
     #include "cads_to_cadbin.h"
     #include "vm.h"
 
-    #define ERRMSG_FILERR "Couldn't open file '%s'.\n"
-    #define ERRMSG_FILERRCREAT "Couldn't open or create file '%s'.\n"
-    #define ERRMSG_NEARGS "Not enough arguments given.\n"
+    #define ERRMSG_FILERR "Couldn't open file '%s'."
+    #define ERRMSG_FILERRCREAT "Couldn't open or create file '%s'."
+    #define ERRMSG_NEARGS "Not enough arguments given."
 
     #define CATASTROPHIC_FAILURE (exit(36), 36)
     #define CATASTROPHIC_OVERSIGHT (exit(36))
