@@ -21,10 +21,24 @@ static void init_vm(cadlangvm_t *vm)
     return;
 }
 
-static void load_exec_data(exec_data_t *exec_data, instruction_t *instruction)
+static data_loader_p_t data_loaders[INSTRUCTION_COUNT] = {
+    op_mov_load_exec_data, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0
+};
+
+static void load_exec_data(cadlangvm_t *vm, exec_data_t *exec_data,
+    instruction_t *instruction)
 {
-    (void)exec_data;
-    (void)instruction;
+    if (instruction->iid >= INSTRUCTION_COUNT) {
+        CATASTROPHIC_OVERSIGHT;
+        return;
+    }
+    exec_data->vm = vm;
+    if (data_loaders[instruction->iid]) {
+        data_loaders[instruction->iid](exec_data, instruction);
+    }
     return;
 }
 
@@ -47,7 +61,7 @@ int load_vm(cads_context_t *context, char *filepath)
     len /= sizeof(instruction_t);
     exec_data = malloc(sizeof(exec_data_t) * len);
     for (int i = 0; i < len; i++) {
-        load_exec_data(&exec_data[i], &instructions_data[i]);
+        load_exec_data(&context->vm, &exec_data[i], &instructions_data[i]);
     }
     return 0;
 }

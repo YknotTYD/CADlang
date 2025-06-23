@@ -64,6 +64,8 @@
     #define SHEBANG "#!/usr/bin/env cadlang\n"
     #define SHEBANG_LEN 23
 
+    #define VALUE_TO_INT(instruction, n) (*((int *)(instruction)->operand_values[(n)]))
+
     #include <stdio.h>
     #include <string.h>
     #include "lutils.h"
@@ -74,7 +76,7 @@ typedef struct {
     int line;
 } label_t;
 
-typedef struct {
+typedef struct instruction_s{
     unsigned char iid;
     unsigned char operand_types[MAX_OPERAND_COUNT];
     unsigned char operand_values[MAX_OPERAND_COUNT][MAX_VALUE_SIZE];

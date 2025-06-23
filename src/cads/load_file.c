@@ -38,10 +38,29 @@ static void remove_labels(char ***file)
     return;
 }
 
+static int get_token_value(char *token, int *n, list_t *labels);
+static int get_indirect_token_value(char *token, int *n)
+{
+    int return_value;
+    int len;
+
+    for (len = 0; token[len]; len++);
+    if (len <= 3 || token[len - 1] != ']') {
+        CATASTROPHIC_OVERSIGHT;
+    }
+    token[len - 1] = '\0';
+    return_value = my_getnbr(&token[2], n);
+    token[len - 1] = ']';
+    return return_value;
+}
+
 static int get_token_value(char *token, int *n, list_t *labels)
 {
     if (token == 0) {
         return 1;
+    }
+    if (token[0] == '[') {
+        return get_indirect_token_value(token, n);
     }
     if (token[1] != '.') {
         return my_getnbr(&token[1], n);

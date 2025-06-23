@@ -16,6 +16,9 @@
 //make error messages red when !isatty;
 //make it so that two labels can't belong to the same line;
 //add error handling for labels pointing on nothing;
+//find a way not to cast everything to ints
+
+//make INDIRECTS unable to be REGS
 
 static void __attribute__((__destructor__)) close_std(void)
 {
